@@ -1,28 +1,11 @@
 import { Component } from "@angular/core";
 import { RestClient } from './RestClient';
 import { FormsModule } from '@angular/forms';
+import { KeyedCollection } from './KeyedC';
 
 @Component({
     selector:'A-loglist',
-    template: `
-    <h2>Logs</h2>
-    Node IP
-    <input [(ngModel)]="nodeIP" />
-    <button (click)=(getLogs())>Get Logs</button>
-
-    <section *ngIf="logs">
-        <div *ngFor="let log of logs">
-            <a href="#" (click)="clickLog(log)">{{log}}</a>
-        </div>
-    
-        <section *ngIf="selected">
-            <h3>Keys for {{selected}}</h3>
-            <div *ngFor="let key of keys">
-                <a href="#">{{key}}</a>
-            </div>
-        </section>
-    </section>
-    `,
+    templateUrl: 'main.html',
     providers: [RestClient]
 })
 export class Loglist {
@@ -32,8 +15,46 @@ export class Loglist {
     logstring: string;
     selected : string;
     keys: Array<string>;
+    nodeips: Array<string>;
+    dict: KeyedCollection<string>;
 
     constructor(private som : RestClient) {
+        this.dict = new KeyedCollection<string>();
+    }
+
+    public AddNode(node : string)
+    {
+        this.nodeips.push(node);
+    }
+
+    public getDictKeys(dictlog: string) : Array<string>
+    {
+        let sublog = new Array<string>();
+        this.dict.Keys().forEach(e => {
+            if(this.dict.Item(e) == dictlog)
+            {
+                sublog.push(e);
+            }
+        });
+        console.log(sublog);
+        return sublog;
+    }
+
+    public getDictLogs() : Array<string>
+    {
+        return this.remove_duplicates(this.dict.Values());
+    }
+
+    public remove_duplicates(arr: Array<string>) {
+        let obj = {};
+        for (let i = 0; i < arr.length; i++) {
+            obj[arr[i]] = true;
+        }
+        arr = [];
+        for (let key in obj) {
+            arr.push(key);
+        }
+        return arr;
     }
 
     public getLogs()
@@ -45,17 +66,18 @@ export class Loglist {
             let a = items.split('\n').reverse();
             a.pop();
             this.logs = a;
+            this.logs.forEach(e => {
+                this.som.GetURL('http://' + this.nodeIP +'/meta/log/'+ e +'/documents')
+                .subscribe(items => 
+                {
+                    this.keys = items;
+                    
+                    this.keys.forEach(x => {
+                        this.dict.Add(x, e);
+                    });
+                });
+            });
         });
-    }
-
-    public clickLog(clickedlog : string)
-    {
-        console.log(clickedlog);
-        this.som.GetURL('http://' + this.nodeIP +'/meta/log/'+ clickedlog +'/documents')
-        .subscribe(items => 
-        {
-            this.keys = items;
-        });
-        this.selected = clickedlog;
     }
 }
+

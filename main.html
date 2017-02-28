@@ -1,0 +1,58 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <nav class="navbar navbar-default navbar-fixed-side" style="padding:8px;">
+        <!--navbar-->
+        
+        <div style="text-align:center;"> <!-- index bar -->
+            <img src="http://i.imgur.com/E6aoGky.png" width="88" height="132"/>
+        </div>
+
+        <div style="margin-bottom: 8px;">
+            <span class="label label-info">Connected to {{nodeIP}}</span>
+        </div>
+
+        <div class="btn-group btn-group-justified" role="group" style="margin-bottom: 8px;">
+            <div class="btn-group" role="group">
+                <button type="button" (click)="getLogs()" class="btn btn-default">Local Logs</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-btn">
+            <button (click)="AddNode()" class="btn btn-default" type="button">Add</button>
+            </span>
+            <input type="text" class="form-control" placeholder="NodeIP">
+        </div><!-- /input-group -->
+
+        <div class="list-group" *ngFor="let ip of nodeips">
+            <button type="button" class="list-group-item">Cras justo odio</button>
+        </div>
+        <!--ende-->
+      </nav>
+    </div>
+    <div class="col-sm-9 col-lg-10">
+      <!--page-->
+        <section *ngIf="keys">
+            <div *ngFor="let log of logs">
+
+                <div class="panel panel-default" style="margin-top: 20px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{log}}</h3>
+                    </div>
+                    <div class="panel-body" *ngFor="let key of getDictKeys(log)">
+                        {{key}}
+                    </div>
+                </div>
+
+            </div>
+        </section>
+      <!--ende-->
+    </div>
+  </div>
+</div>
+
+<h2>Logs</h2>
+    
+
+    
