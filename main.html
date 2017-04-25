@@ -18,16 +18,23 @@
             </div>
         </div>
 
-        <div class="input-group">
+        <div class="input-group" style="margin-bottom: 8px;">
             <span class="input-group-btn">
-            <button (click)="AddNode()" class="btn btn-default" type="button">Add</button>
+            <button (click)="AddNode(name.value)" class="btn btn-default" type="button">Add</button>
             </span>
-            <input type="text" class="form-control" placeholder="NodeIP">
+            <input #name placeholder="name" type="text" class="form-control" placeholder="NodeIP">
         </div><!-- /input-group -->
 
-        <div class="list-group" *ngFor="let ip of nodeips">
-            <button type="button" class="list-group-item">Cras justo odio</button>
+        <button style="margin-top:8px;margin-bottom: 5px;" class="btn btn-primary" type="button">
+            Peer List <span class="badge" style="margin-left: 3px;">{{nodeips.length}}</span>
+        </button>
+
+        <div id="list" class="list-group">
+            <ul class="list-group">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-info" *ngFor="let sip of nodeips">{{sip}}</a>
+            </ul>
         </div>
+
         <!--ende-->
       </nav>
     </div>
@@ -51,8 +58,6 @@
     </div>
   </div>
 </div>
-
-<h2>Logs</h2>
     
 
     

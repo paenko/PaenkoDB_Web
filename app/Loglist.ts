@@ -10,16 +10,21 @@ import { KeyedCollection } from './KeyedC';
 })
 export class Loglist {
 
-    nodeIP = '207.154.216.94:3000';
+    nodeIP = '192.168.0.27:3000';
     logs: Array<string>;
     logstring: string;
     selected : string;
     keys: Array<string>;
+    peers : Array<string>;
+    peerstring : string;
     nodeips: Array<string>;
     dict: KeyedCollection<string>;
 
     constructor(private som : RestClient) {
         this.dict = new KeyedCollection<string>();
+        this.nodeips = new Array<string>();
+        this.peers = new Array<string>();
+        this.getPeers();
     }
 
     public AddNode(node : string)
@@ -55,6 +60,16 @@ export class Loglist {
             arr.push(key);
         }
         return arr;
+    }
+
+    public getPeers()
+    {
+        this.som.GetURLStrings('http://' + this.nodeIP +'/meta/peers')
+        .subscribe(items => 
+        {
+            this.peerstring = items;
+        console.log(this.peerstring);
+        });
     }
 
     public getLogs()
