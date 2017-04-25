@@ -8,6 +8,7 @@ import { KeyedCollection } from './KeyedC';
     templateUrl: 'main.html',
     providers: [RestClient]
 })
+
 export class Loglist {
 
     nodeIP = '192.168.0.27:3000';
@@ -62,13 +63,20 @@ export class Loglist {
         return arr;
     }
 
+
     public getPeers()
     {
         this.som.GetURLStrings('http://' + this.nodeIP +'/meta/peers')
         .subscribe(items => 
         {
             this.peerstring = items;
-        console.log(this.peerstring);
+            let pss = this.peerstring.split('"');
+            for(let i = 0; i<pss.length;i=i+5)
+            {
+                let pip = pss[i+3];
+                this.peers.push(pip);
+            }
+            console.log(this.peers);
         });
     }
 
